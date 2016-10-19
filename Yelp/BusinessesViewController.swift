@@ -8,12 +8,17 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    @IBOutlet weak var businessesTableView: UITableView!
     
     var businesses: [Business]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        businessesTableView.dataSource = self
+        businessesTableView.delegate = self
         
         Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
             
@@ -24,6 +29,8 @@ class BusinessesViewController: UIViewController {
                     print(business.address!)
                 }
             }
+            
+            self.businessesTableView.reloadData()
             
             }
         )
@@ -39,6 +46,24 @@ class BusinessesViewController: UIViewController {
          }
          */
         
+    }
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return businesses?.count ?? 0
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = businessesTableView.dequeueReusableCell(withIdentifier: "BusinessCell", for: indexPath) as! BusinessCell
+        
+        let business = businesses[indexPath.row]
+        cell.businessLabel.text = business.name!
+        cell.businessImageView.setImageWith(business.imageURL!)
+        cell.ratingImageView.setImageWith(business.ratingImageURL!)
+        cell.addressLabel.text = business.address!
+        cell.distanceLabel.text = business.distance!
+        cell.categoriesLabel.text = business.categories!
+        
+        return cell
     }
     
     override func didReceiveMemoryWarning() {
