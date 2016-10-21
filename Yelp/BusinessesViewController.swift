@@ -8,11 +8,15 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
     
     @IBOutlet weak var businessesTableView: UITableView!
     
     var businesses: [Business]!
+    
+    var filteredBusinesses: [Business]!
+    
+    var searchController: UISearchController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,16 +26,17 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         businessesTableView.estimatedRowHeight = 100
         businessesTableView.rowHeight = UITableViewAutomaticDimension
         
-        Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.placeholder = "Restaurants"
+        navigationItem.titleView = searchController.searchBar
+        searchController.hidesNavigationBarDuringPresentation = false
+        
+        Business.searchWithTerm(term: "Restaurants", completion: { (businesses: [Business]?, error: Error?) -> Void in
             
             self.businesses = businesses
-            if let businesses = businesses {
-                for business in businesses {
-                    print(business.name!)
-                    print(business.address!)
-                }
-            }
-            
             self.businessesTableView.reloadData()
             
             }
@@ -50,6 +55,17 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         
     }
     
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchText = searchController.searchBar.text ?? ""
+        Business.searchWithTerm(term: "Restaurants \(searchText)", completion: { (businesses: [Business]?, error: Error?) -> Void in
+            
+            self.businesses = businesses
+            self.businessesTableView.reloadData()
+            
+            }
+        )
+    }
+    
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return businesses?.count ?? 0
     }
@@ -59,7 +75,9 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         
         let business = businesses[indexPath.row]
         cell.businessLabel.text = business.name!
-        cell.businessImageView.setImageWith(business.imageURL!)
+        if let imageUrl = business.imageURL {
+            cell.businessImageView.setImageWith(imageUrl)
+        }
         cell.businessImageView.layer.cornerRadius = 5.0
         cell.businessImageView.clipsToBounds = true
         cell.ratingImageView.setImageWith(business.ratingImageURL!)
