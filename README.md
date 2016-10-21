@@ -2,7 +2,7 @@
 
 **Chow Hunt** is a Yelp search app using the [Yelp API](http://www.yelp.com/developers/documentation/v2/search_api).
 
-Time spzent: **3.5** hours spent in total
+Time spzent: **4** hours spent in total
 
 ## User Stories
 
