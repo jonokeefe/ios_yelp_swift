@@ -16,6 +16,7 @@ class BusinessCell: UITableViewCell {
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var categoriesLabel: UILabel!
+    @IBOutlet weak var reviewCountLabel: UILabel!
     
     
     override func awakeFromNib() {

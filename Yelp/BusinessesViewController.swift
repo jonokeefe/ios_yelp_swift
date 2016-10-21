@@ -19,6 +19,8 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         
         businessesTableView.dataSource = self
         businessesTableView.delegate = self
+        businessesTableView.estimatedRowHeight = 100
+        businessesTableView.rowHeight = UITableViewAutomaticDimension
         
         Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
             
@@ -58,10 +60,13 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         let business = businesses[indexPath.row]
         cell.businessLabel.text = business.name!
         cell.businessImageView.setImageWith(business.imageURL!)
+        cell.businessImageView.layer.cornerRadius = 5.0
+        cell.businessImageView.clipsToBounds = true
         cell.ratingImageView.setImageWith(business.ratingImageURL!)
         cell.addressLabel.text = business.address!
         cell.distanceLabel.text = business.distance!
         cell.categoriesLabel.text = business.categories!
+        cell.reviewCountLabel.text = "\(business.reviewCount!) Reviews"
         
         return cell
     }
