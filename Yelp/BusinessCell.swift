@@ -1,3 +1,4 @@
+
 //
 //  BusinessCell.swift
 //  ChowHunt
@@ -18,6 +19,22 @@ class BusinessCell: UITableViewCell {
     @IBOutlet weak var categoriesLabel: UILabel!
     @IBOutlet weak var reviewCountLabel: UILabel!
     
+    var business: Business! {
+        didSet {
+            businessLabel.text = business.name!
+            if let imageUrl = business.imageURL {
+                businessImageView.setImageWith(imageUrl)
+            }
+            businessImageView.layer.cornerRadius = 5.0
+            businessImageView.clipsToBounds = true
+            ratingImageView.setImageWith(business.ratingImageURL!)
+            addressLabel.text = business.address!
+            distanceLabel.text = business.distance!
+            categoriesLabel.text = business.categories!
+            reviewCountLabel.text = "\(business.reviewCount!) Reviews"
+        }
+    }
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,7 +42,7 @@ class BusinessCell: UITableViewCell {
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
+        super.setSelected(false, animated: animated)
 
         // Configure the view for the selected state
     }

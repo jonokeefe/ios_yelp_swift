@@ -2,7 +2,7 @@
 
 **Chow Hunt** is a Yelp search app using the [Yelp API](http://www.yelp.com/developers/documentation/v2/search_api).
 
-Time spzent: **4** hours spent in total
+Time spzent: **8** hours spent in total
 
 ## User Stories
 
@@ -17,7 +17,7 @@ The following **required** functionality is completed:
    - [ ] The filters table should be organized into sections as in the mock.
    - [ ] You can use the default UISwitch for on/off states.
    - [ ] Clicking on the "Search" button should dismiss the filters page and trigger the search w/ the new filter settings.
-   - [ ] Display some of the available Yelp categories (choose any 3-4 that you want).
+   - [X] Display some of the available Yelp categories (choose any 3-4 that you want).
 
 The following **optional** features are implemented:
 

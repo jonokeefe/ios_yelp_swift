@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, FilterViewControllerDelegate {
     
     @IBOutlet weak var businessesTableView: UITableView!
     
@@ -72,20 +72,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = businessesTableView.dequeueReusableCell(withIdentifier: "BusinessCell", for: indexPath) as! BusinessCell
-        
-        let business = businesses[indexPath.row]
-        cell.businessLabel.text = business.name!
-        if let imageUrl = business.imageURL {
-            cell.businessImageView.setImageWith(imageUrl)
-        }
-        cell.businessImageView.layer.cornerRadius = 5.0
-        cell.businessImageView.clipsToBounds = true
-        cell.ratingImageView.setImageWith(business.ratingImageURL!)
-        cell.addressLabel.text = business.address!
-        cell.distanceLabel.text = business.distance!
-        cell.categoriesLabel.text = business.categories!
-        cell.reviewCountLabel.text = "\(business.reviewCount!) Reviews"
-        
+        cell.business = businesses[indexPath.row]
         return cell
     }
     
@@ -94,14 +81,17 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         // Dispose of any resources that can be recreated.
     }
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let navigationController = segue.destination as! UINavigationController
+        let filterViewController = navigationController.topViewController as! FilterViewController
+        filterViewController.delegate = self
+    }
     
+    func filterViewController(filterViewController: FilterViewController, didUpdateFilters filters: [String : AnyObject]) {
+        let categories = filters["categories"] as? [String]
+        Business.searchWithTerm(term: "Restaurants", sort: nil, categories: categories, deals: nil) { (businesses: [Business]?, error: Error?) -> Void in
+            self.businesses = businesses
+            self.businessesTableView.reloadData()
+        }
+    }
 }
