@@ -28,9 +28,9 @@ class BusinessCell: UITableViewCell {
             businessImageView.layer.cornerRadius = 5.0
             businessImageView.clipsToBounds = true
             ratingImageView.setImageWith(business.ratingImageURL!)
-            addressLabel.text = business.address!
-            distanceLabel.text = business.distance!
-            categoriesLabel.text = business.categories!
+            addressLabel.text = business.address
+            distanceLabel.text = business.distance
+            categoriesLabel.text = business.categories
             reviewCountLabel.text = "\(business.reviewCount!) Reviews"
         }
     }

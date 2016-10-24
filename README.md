@@ -2,7 +2,7 @@
 
 **Chow Hunt** is a Yelp search app using the [Yelp API](http://www.yelp.com/developers/documentation/v2/search_api).
 
-Time spzent: **8** hours spent in total
+Time spzent: **14** hours spent in total
 
 ## User Stories
 
@@ -12,11 +12,11 @@ The following **required** functionality is completed:
    - [X] Table rows should be dynamic height according to the content height.
    - [X] Custom cells should have the proper Auto Layout constraints.
    - [X] Search bar should be in the navigation bar (doesn't have to expand to show location like the real Yelp app does).
-- [ ] Filter page. Unfortunately, not all the filters are supported in the Yelp API.
-   - [ ] The filters you should actually have are: category, sort (best match, distance, highest rated), distance, deals (on/off).
-   - [ ] The filters table should be organized into sections as in the mock.
-   - [ ] You can use the default UISwitch for on/off states.
-   - [ ] Clicking on the "Search" button should dismiss the filters page and trigger the search w/ the new filter settings.
+- [X] Filter page. Unfortunately, not all the filters are supported in the Yelp API.
+   - [X] The filters you should actually have are: category, sort (best match, distance, highest rated), distance, deals (on/off).
+   - [X] The filters table should be organized into sections as in the mock.
+   - [X] You can use the default UISwitch for on/off states.
+   - [X] Clicking on the "Search" button should dismiss the filters page and trigger the search w/ the new filter settings.
    - [X] Display some of the available Yelp categories (choose any 3-4 that you want).
 
 The following **optional** features are implemented:
@@ -36,8 +36,8 @@ The following **additional** features are implemented:
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1.
-2.
+1. How to create the filter page table view(s)
+2. A cleaner and more sucinct way of storing and passing around the filter data
 
 ## Video Walkthrough
 
@@ -49,7 +49,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Creating the layout for the filter page took far, far longer than I intended. As did managing the filter data to a smaller degree. I feel like I was missing an approach that I should've used and did it the hard way instead. I should've had a lot more time to complete the optional features.
 
 ## License
 

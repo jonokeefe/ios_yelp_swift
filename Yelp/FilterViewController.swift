@@ -9,16 +9,27 @@
 import UIKit
 
 @objc protocol FilterViewControllerDelegate {
-    @objc optional func filterViewController(filterViewController: FilterViewController, didUpdateFilters filters: [String: AnyObject])
+    @objc optional func filterViewController(filterViewController: FilterViewController, didUpdateFilters filters: Filters)
 }
 
-class FilterViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SwitchCellDelegate {
+class FilterViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SwitchCellDelegate, SelectionCellDelegate {
 
     @IBOutlet weak var filtersTableView: UITableView!
     weak var delegate: FilterViewControllerDelegate?
+    let tableStructure = ["", "Distance", "Sort", "Categories"] // Deals has no header--only 1 cell
+    let CATEGORIES_SECTION_NUM = 3
+    let SORT_SECTION_NUM = 2
+    let DISTANCE_SECTION_NUM = 1
+    let DEALS_SECTION_NUM = 0
     
-    var categories: [[String: String]]!
+    var filters = Filters()
+    var filterCategories: [[String: String]]!
+    var filterDistances: [[String: String]]!
+    var filterSortOptions: [[String: String]]!
     var switchStates = [Int: Bool]()
+    var selectedDistanceRow = 0
+    var selectedSortOptionRow = 0
+    var isOfferingDeal = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +37,9 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
         filtersTableView.delegate = self
         filtersTableView.estimatedRowHeight = 50
         filtersTableView.rowHeight = UITableViewAutomaticDimension
-        categories = yelpCategories()
+        filterCategories = yelpShortCategories()
+        filterDistances = yelpDistances()
+        filterSortOptions = yelpSortOptions()
     }
 
     override func didReceiveMemoryWarning() {
@@ -40,36 +53,131 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     
     @IBAction func onSearchClicked(_ sender: AnyObject) {
         dismiss(animated: true, completion: nil)
-        var filters = [String: AnyObject]()
         
-        var selectedCategories = [String]()
+        // Update filters with Categories
+        var selectedCategories = [String: String]()
         for (row, isSelected) in switchStates {
             if isSelected {
-                selectedCategories.append(categories[row]["code"]!)
+                selectedCategories[filterCategories[row]["name"]!] = filterCategories[row]["code"]!
             }
         }
         if !selectedCategories.isEmpty {
-            filters["categories"] = selectedCategories as AnyObject?
+            filters.categories = selectedCategories
         }
+        
+        // Update filters with Distance
+        let derp = filterDistances[selectedDistanceRow]["value"]!
+        print("[derp] Distance value: \(derp)")
+        filters.distance = Int(filterDistances[selectedDistanceRow]["value"]!)
+        
+        // Update filters with Sort mode
+        let derp2 = filterSortOptions[selectedSortOptionRow]["code"]!
+        print("[derp] Sort value: \(derp2)")
+        filters.sort = Int(filterSortOptions[selectedSortOptionRow]["code"]!)!
+        
+        // Update filters with Deal offered
+        print("[derp] Deal value: \(isOfferingDeal)")
+        filters.deals = isOfferingDeal
         
         delegate?.filterViewController?(filterViewController: self, didUpdateFilters: filters)
     }
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return tableStructure.count
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return tableStructure[section]
+    }
+    
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categories.count
+        var count = 0
+        if section == CATEGORIES_SECTION_NUM {
+            count = filterCategories.count
+        } else if section == SORT_SECTION_NUM {
+            count = filterSortOptions.count
+        } else if section == DISTANCE_SECTION_NUM {
+            count = filterDistances.count
+        } else if section == DEALS_SECTION_NUM {
+            count = 1
+        }
+        return count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = filtersTableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
-        cell.content = categories[indexPath.row]
-        cell.delegate = self
-        cell.switchView.isOn = switchStates[indexPath.row] ?? false
-        return cell
+        if indexPath.section == CATEGORIES_SECTION_NUM {
+            let cell = filtersTableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
+            cell.content = filterCategories[indexPath.row]
+            cell.delegate = self
+            cell.switchView.isOn = switchStates[indexPath.row] ?? false
+            return cell
+        } else if indexPath.section == SORT_SECTION_NUM {
+            let cell = filtersTableView.dequeueReusableCell(withIdentifier: "SelectionCell", for: indexPath) as! SelectionCell
+            cell.content = filterSortOptions[indexPath.row]
+            cell.delegate = self
+            let isSelected = indexPath.row == selectedSortOptionRow
+            cell.accessoryType = isSelected ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
+            return cell
+        } else if indexPath.section == DISTANCE_SECTION_NUM {
+            let cell = filtersTableView.dequeueReusableCell(withIdentifier: "SelectionCell", for: indexPath) as! SelectionCell
+            cell.content = filterDistances[indexPath.row]
+            cell.delegate = self
+            let isSelected = indexPath.row == selectedDistanceRow
+            cell.accessoryType = isSelected ? UITableViewCellAccessoryType.checkmark : UITableViewCellAccessoryType.none
+            return cell
+        } else if indexPath.section == DEALS_SECTION_NUM {
+            let cell = filtersTableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
+            cell.content = ["name" : "Offering a deal", "code": "deals"]
+            cell.delegate = self
+            cell.switchView.isOn = isOfferingDeal
+            return cell
+        }
+        return filtersTableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath)
     }
     
     func switchCell(switchCell: SwitchCell, didChangeValue value: Bool) {
         let indexPath = filtersTableView.indexPath(for: switchCell)!
-        switchStates[indexPath.row] = value
+        if indexPath.section == CATEGORIES_SECTION_NUM {
+            switchStates[indexPath.row] = value
+        } else if indexPath.section == DEALS_SECTION_NUM {
+            isOfferingDeal = value
+        }
+    }
+    
+    func selectionCell(selected selectionCell: SelectionCell) {
+        selectionCell.accessoryType = UITableViewCellAccessoryType.checkmark
+        let indexPath = filtersTableView.indexPath(for: selectionCell)!
+        filtersTableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.section == DISTANCE_SECTION_NUM {
+            selectedDistanceRow = indexPath.row
+        } else if indexPath.section == SORT_SECTION_NUM {
+            selectedSortOptionRow = indexPath.row
+        }
+        deselectOtherRows(selectedIndexPath: indexPath)
+    }
+    
+    func deselectOtherRows(selectedIndexPath: IndexPath) {
+        let rowCount = filtersTableView.numberOfRows(inSection: selectedIndexPath.section)
+        for row in 0 ..< rowCount {
+            if row != selectedIndexPath.row {
+                let cell = filtersTableView.cellForRow(at: IndexPath(row: row, section: selectedIndexPath.section))
+                cell?.accessoryType = UITableViewCellAccessoryType.none
+            }
+        }
+    }
+    
+    func yelpDistances() -> [[String: String]] { // [[displayName: meterValue]]
+        return [["name": "Best Match", "value": ""],
+                ["name": "0.3 miles", "value": "483"],
+                ["name": "1 mile", "value": "1609"],
+                ["name": "2 miles", "value": "3219"],
+                ["name": "5 miles", "value": "8047"]]
+    }
+    
+    func yelpSortOptions() -> [[String: String]] {
+        return [["name": "Best Match", "code": "0"],
+                ["name": "Distance", "code": "1"],
+                ["name": "Rating", "code": "2"]]
     }
     
     func yelpShortCategories() -> [[String : String]] {

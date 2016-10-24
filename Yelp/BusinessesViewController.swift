@@ -18,6 +18,8 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     
     var searchController: UISearchController!
     
+    var filters = Filters()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -41,18 +43,10 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
             
             }
         )
-        
-        /* Example of Yelp search with more search options specified
-         Business.searchWithTerm("Restaurants", sort: .Distance, categories: ["asianfusion", "burgers"], deals: true) { (businesses: [Business]!, error: NSError!) -> Void in
-         self.businesses = businesses
-         
-         for business in businesses {
-         print(business.name!)
-         print(business.address!)
-         }
-         }
-         */
-        
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        searchController.searchResultsUpdater = nil
     }
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -85,11 +79,13 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         let navigationController = segue.destination as! UINavigationController
         let filterViewController = navigationController.topViewController as! FilterViewController
         filterViewController.delegate = self
+        searchController.dismiss(animated: true, completion: nil)
     }
     
-    func filterViewController(filterViewController: FilterViewController, didUpdateFilters filters: [String : AnyObject]) {
-        let categories = filters["categories"] as? [String]
-        Business.searchWithTerm(term: "Restaurants", sort: nil, categories: categories, deals: nil) { (businesses: [Business]?, error: Error?) -> Void in
+    func filterViewController(filterViewController: FilterViewController, didUpdateFilters filters: Filters) {
+        self.filters = filters
+        let searchText = searchController.searchBar.text ?? ""
+        Business.searchWithTerm(term: "Restaurants \(searchText)", sort: YelpSortMode(rawValue: filters.sort), categories: Array(filters.categories.values), distance: filters.distance, deals: filters.deals) { (businesses: [Business]?, error: Error?) -> Void in
             self.businesses = businesses
             self.businessesTableView.reloadData()
         }
