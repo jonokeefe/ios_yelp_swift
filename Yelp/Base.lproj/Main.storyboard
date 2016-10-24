@@ -57,8 +57,7 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Categories" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qSD-Fx-4at">
-                                                    <frame key="frameInset" minX="96" minY="75" width="269" height="112"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Categories" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qSD-Fx-4at">
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -82,7 +81,7 @@
                                                 <constraint firstItem="z8b-fk-2Ie" firstAttribute="top" secondItem="8xF-Uk-9re" secondAttribute="top" id="U6h-zO-rcO"/>
                                                 <constraint firstItem="8xF-Uk-9re" firstAttribute="leading" secondItem="PTU-1B-PRX" secondAttribute="leading" constant="10" id="VVu-0e-cFW"/>
                                                 <constraint firstAttribute="trailing" secondItem="8jg-o4-EMi" secondAttribute="trailing" constant="20" id="YWB-ji-bJl"/>
-                                                <constraint firstAttribute="trailing" secondItem="qSD-Fx-4at" secondAttribute="trailing" constant="10" id="qH2-zn-EJj"/>
+                                                <constraint firstAttribute="trailing" secondItem="qSD-Fx-4at" secondAttribute="trailing" constant="20" id="qH2-zn-EJj"/>
                                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="qSD-Fx-4at" secondAttribute="bottom" constant="10" id="rRe-0X-cM9"/>
                                                 <constraint firstItem="z8b-fk-2Ie" firstAttribute="leading" secondItem="8xF-Uk-9re" secondAttribute="trailing" constant="6" id="rpd-UO-5ip"/>
                                                 <constraint firstItem="8jg-o4-EMi" firstAttribute="top" secondItem="V3t-1Z-qyY" secondAttribute="bottom" constant="8" id="swX-lN-S6C"/>
@@ -137,7 +136,7 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SwitchCell" id="joE-b6-hdX" customClass="SwitchCell" customModule="ChowHunt" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="56" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="joE-b6-hdX" id="gUK-uO-EHZ">
                                             <frame key="frameInset" width="375" height="43.5"/>
@@ -163,10 +162,10 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="SelectionCell" id="GSO-VF-ix6" customClass="SelectionCell" customModule="ChowHunt" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="100" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="GSO-VF-ix6" id="wNh-aa-W6j">
-                                            <frame key="frameInset" width="336" height="43"/>
+                                            <frame key="frameInset" width="336" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dBA-z3-UpN">
