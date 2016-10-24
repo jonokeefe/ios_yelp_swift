@@ -36,7 +36,7 @@ The following **additional** features are implemented:
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1. How to create the filter page table view(s)
+1. Different ways to create the filter page table view(s)
 2. A cleaner and more sucinct way of storing and passing around the filter data
 
 ## Video Walkthrough
